@@ -1,8 +1,34 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Nudge 🧘‍♀️
 
-## Getting Started
+Not a diagnosis. Just a **nudge**.
 
-First, run the development server:
+Nudge is a beautiful, modern web application designed to be a safe space to understand what your body is telling you — no fear, no judgment, no rush. It allows users to check in with their feelings (e.g., fatigue, headaches, anxiety), normalizes their symptoms by showing how common they are, provides gentle next steps, and helps users track their progress over time.
+
+## 🌟 Features
+
+- **Symptom Check-in:** A judgment-free zone to select how you're feeling, including options like fatigue, trouble sleeping, anxiety, and free-text descriptions. No account needed.
+- **Normalizer:** Shows statistics and reframes your feelings to remind you that you are not alone.
+- **Gentle Next Steps:** Offers actionable, low-pressure next steps (like "Rest, just for 10 minutes", "Drink a glass of water", or "Breathe").
+- **Track Over Time:** Features a streak tracker and reminders to encourage consistent, gentle self-reflection.
+- **Beautiful UI/UX:** Features a calming color palette, smooth scroll animations (via Lenis), and micro-animations (via Motion) to make the experience soothing and alive.
+
+## 🛠️ Tech Stack
+
+- **Framework:** [Next.js](https://nextjs.org/) (App Router)
+- **Styling:** Vanilla CSS (`globals.css`) with CSS Variables for a customized design system
+- **Animations:** [Motion](https://motion.dev/) (Framer Motion)
+- **Smooth Scrolling:** [Lenis](https://lenis.studiofreight.com/)
+- **Icons:** [Lucide React](https://lucide.dev/)
+
+## 🚀 Getting Started
+
+First, install the dependencies:
+
+```bash
+npm install
+```
+
+Then, run the development server:
 
 ```bash
 npm run dev
@@ -16,21 +42,9 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## 🎨 Design Philosophy
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Nudge prioritizes visual excellence and a calming aesthetic:
+- **Colors:** Curated harmonious palette with a soft cream background (`#FFF0E4`) and deep teal primary accents (`#007979`).
+- **Typography:** Clean, readable, and modern heading and body fonts.
+- **Micro-interactions:** Elements feature subtle hover and tap scaling to make the interface feel responsive and welcoming.
