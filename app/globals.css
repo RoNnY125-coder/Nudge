@@ -205,7 +205,7 @@ h1, h2, h3, .h1, .h2, .h3 {
 }
 
 @media (max-width: 768px) {
-  .navbar-links-container {
+  .navbar-links-container, .navbar-cta {
     display: none;
   }
   .hamburger {
@@ -213,6 +213,8 @@ h1, h2, h3, .h1, .h2, .h3 {
   }
   .navbar {
     padding: 12px 16px;
+    top: 8px;
+    width: calc(100% - 16px);
   }
 }
 
@@ -264,7 +266,7 @@ h1, h2, h3, .h1, .h2, .h3 {
   position: relative;
   z-index: 2;
   flex-shrink: 0;
-  width: clamp(200px, 30vw, 400px);
+  width: clamp(250px, 40vw, 400px);
 }
 
 .hero-content {
@@ -314,16 +316,24 @@ h1, h2, h3, .h1, .h2, .h3 {
   .hero-container {
     flex-direction: column;
     text-align: center;
+    gap: 20px;
   }
   .hero-nudge-text {
     position: relative;
     top: auto;
     transform: none;
     text-align: center;
-    font-size: clamp(48px, 15vw, 100px);
+    font-size: clamp(60px, 15vw, 100px);
+    margin-bottom: -20px;
+  }
+  .hero-content {
+    max-width: 100%;
   }
   .hero-buttons {
     justify-content: center;
+  }
+  .hero-card {
+    padding: 24px;
   }
 }
 
@@ -454,6 +464,25 @@ h1, h2, h3, .h1, .h2, .h3 {
 @media (max-width: 768px) {
   .checkin {
     padding: 80px 20px;
+  }
+  .checkin-container {
+    padding-left: 0;
+    padding-right: 0;
+    text-align: center;
+  }
+  .checkin-watermark {
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0.1;
+  }
+  .checkin h2, .checkin .subtext {
+    text-align: center;
+  }
+  .tags-grid {
+    grid-template-columns: 1fr;
+  }
+  .trust-badge {
+    margin-bottom: 24px;
   }
 }
 
@@ -833,4 +862,15 @@ h1, h2, h3, .h1, .h2, .h3 {
   font-size: 13px;
   color: rgba(255, 255, 255, 0.7);
   white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .footer {
+    height: 300px;
+  }
+  .footer-nudge-text {
+    font-size: 48px;
+    letter-spacing: 4px;
+    bottom: 25%;
+  }
 }
