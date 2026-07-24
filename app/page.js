@@ -1,32 +1,37 @@
 "use client";
 
 import { useState } from "react";
+import IntroLoading from "@/components/IntroLoading";
 import Navbar from "@/components/Navbar";
-import Hero from "@/components/Hero";
-import SymptomCheckin from "@/components/SymptomCheckin";
-import Normalizer from "@/components/Normalizer";
-import GentleNextStep from "@/components/GentleNextStep";
-import TrackOverTime from "@/components/TrackOverTime";
-import Footer from "@/components/Footer";
+import HeroSection from "@/components/HeroSection";
+import WhyNudgeSection from "@/components/WhyNudgeSection";
+import DailyCheckinSection from "@/components/DailyCheckinSection";
+import YoureNotAloneSection from "@/components/YoureNotAloneSection";
+import WhatHappensNextSection from "@/components/WhatHappensNextSection";
+import DesignProcessSection from "@/components/DesignProcessSection";
+import Footer3D from "@/components/Footer3D";
 
 export default function Home() {
-  const [selectedSymptoms, setSelectedSymptoms] = useState([]);
-  const [freeText, setFreeText] = useState("");
+  const [introFinished, setIntroFinished] = useState(false);
 
   return (
-    <main>
+    <main className="min-h-screen bg-[#F3EFE6] text-[#1E2A22] relative overflow-hidden">
+      {/* Intro Preloader */}
+      <IntroLoading onComplete={() => setIntroFinished(true)} />
+
+      {/* Persistent Floating Navbar */}
       <Navbar />
-      <Hero />
-      <SymptomCheckin 
-        selectedSymptoms={selectedSymptoms} 
-        setSelectedSymptoms={setSelectedSymptoms}
-        freeText={freeText}
-        setFreeText={setFreeText}
-      />
-      <Normalizer selectedSymptoms={selectedSymptoms} />
-      <GentleNextStep />
-      <TrackOverTime />
-      <Footer />
+
+      {/* Page Content */}
+      <div className={`transition-opacity duration-700 ${introFinished ? "opacity-100" : "opacity-0"}`}>
+        <HeroSection />
+        <WhyNudgeSection />
+        <DailyCheckinSection />
+        <YoureNotAloneSection />
+        <WhatHappensNextSection />
+        <DesignProcessSection />
+        <Footer3D />
+      </div>
     </main>
   );
 }
