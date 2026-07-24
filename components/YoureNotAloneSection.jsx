@@ -42,7 +42,7 @@ export default function YoureNotAloneSection() {
   const heardRef = useRef(null);
   const timeRef = useRef(null);
   const totalRef = useRef(null);
-  const [isVisible, setIsVisible] = useState(false);
+  const [isInView, setIsInView] = useState(true);
 
   const chartData = [
     { label: "Tired / low energy", percentage: 72 },
@@ -53,8 +53,8 @@ export default function YoureNotAloneSection() {
 
   useEffect(() => {
     const observer = new IntersectionObserver(
-      ([entry]) => setIsVisible(entry.isIntersecting),
-      { rootMargin: "100px" }
+      ([entry]) => setIsInView(entry.isIntersecting),
+      { rootMargin: "300px" }
     );
     if (canvasContainerRef.current) observer.observe(canvasContainerRef.current);
     return () => observer.disconnect();
@@ -82,7 +82,7 @@ export default function YoureNotAloneSection() {
         );
       });
 
-      // Direct DOM update for count up — no React state re-renders on scroll!
+      // Direct DOM update for count up
       ScrollTrigger.create({
         trigger: sectionRef.current,
         start: "top 70%",
@@ -131,14 +131,15 @@ export default function YoureNotAloneSection() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           {/* Left: 3D Glossy Sphere with Overlay */}
           <div ref={canvasContainerRef} className="lg:col-span-4 relative h-64 lg:h-80 flex items-center justify-center">
-            {isVisible && (
-              <Canvas camera={{ position: [0, 0, 4.8], fov: 45 }}>
-                <ambientLight intensity={1.5} />
-                <directionalLight position={[3, 3, 3]} intensity={2} color="#7FA07A" />
-                <pointLight position={[-3, -3, -1]} intensity={1} color="#D98F6E" />
-                <MiniGlossySphere />
-              </Canvas>
-            )}
+            <Canvas
+              camera={{ position: [0, 0, 4.8], fov: 45 }}
+              frameloop={isInView ? "always" : "never"}
+            >
+              <ambientLight intensity={1.5} />
+              <directionalLight position={[3, 3, 3]} intensity={2} color="#7FA07A" />
+              <pointLight position={[-3, -3, -1]} intensity={1} color="#D98F6E" />
+              <MiniGlossySphere />
+            </Canvas>
 
             {/* Badge Overlay */}
             <div className="absolute glass-card-dark px-5 py-3 rounded-2xl text-center shadow-xl border border-white/10">
