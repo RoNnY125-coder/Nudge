@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Float } from "@react-three/drei";
-import * as THREE from "three";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -17,23 +16,19 @@ function MiniGlossySphere() {
   useFrame((state) => {
     if (meshRef.current) {
       const time = state.clock.getElapsedTime();
-      meshRef.current.rotation.y = time * 0.4;
-      meshRef.current.rotation.x = Math.sin(time * 0.2) * 0.15;
+      meshRef.current.rotation.y = time * 0.3;
+      meshRef.current.rotation.x = Math.sin(time * 0.2) * 0.1;
     }
   });
 
   return (
-    <Float speed={2} rotationIntensity={0.3} floatIntensity={0.4}>
+    <Float speed={1.5} rotationIntensity={0.2} floatIntensity={0.3}>
       <mesh ref={meshRef}>
-        <sphereGeometry args={[1.3, 64, 64]} />
-        <meshPhysicalMaterial
+        <sphereGeometry args={[1.3, 32, 32]} />
+        <meshStandardMaterial
           color="#6E8F6C"
-          roughness={0.15}
-          metalness={0.1}
-          clearcoat={1.0}
-          clearcoatRoughness={0.1}
-          transmission={0.4}
-          thickness={0.5}
+          roughness={0.2}
+          metalness={0.2}
         />
       </mesh>
     </Float>
@@ -42,8 +37,12 @@ function MiniGlossySphere() {
 
 export default function YoureNotAloneSection() {
   const sectionRef = useRef(null);
+  const canvasContainerRef = useRef(null);
   const barsRef = useRef([]);
-  const [counts, setCounts] = useState({ heard: 0, time: 0, total: 0 });
+  const heardRef = useRef(null);
+  const timeRef = useRef(null);
+  const totalRef = useRef(null);
+  const [isVisible, setIsVisible] = useState(false);
 
   const chartData = [
     { label: "Tired / low energy", percentage: 72 },
@@ -51,6 +50,15 @@ export default function YoureNotAloneSection() {
     { label: "Can't focus", percentage: 45 },
     { label: "Anxious", percentage: 63 },
   ];
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsVisible(entry.isIntersecting),
+      { rootMargin: "100px" }
+    );
+    if (canvasContainerRef.current) observer.observe(canvasContainerRef.current);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -74,7 +82,7 @@ export default function YoureNotAloneSection() {
         );
       });
 
-      // Count up numbers on scroll
+      // Direct DOM update for count up — no React state re-renders on scroll!
       ScrollTrigger.create({
         trigger: sectionRef.current,
         start: "top 70%",
@@ -86,11 +94,9 @@ export default function YoureNotAloneSection() {
               ease: "power1.out",
               onUpdate: function () {
                 const progress = this.progress();
-                setCounts({
-                  heard: Math.floor(progress * 94),
-                  time: (progress * 3).toFixed(0),
-                  total: (progress * 12).toFixed(0),
-                });
+                if (heardRef.current) heardRef.current.innerText = `${Math.floor(progress * 94)}%`;
+                if (timeRef.current) timeRef.current.innerText = `${(progress * 3).toFixed(0)}min`;
+                if (totalRef.current) totalRef.current.innerText = `${(progress * 12).toFixed(0)}k+`;
               },
             }
           );
@@ -107,8 +113,8 @@ export default function YoureNotAloneSection() {
       ref={sectionRef}
       className="py-28 bg-[#14251C] text-[#F3EFE6] relative overflow-hidden"
     >
-      {/* Background Ambient Drifting Particle Mesh */}
-      <div className="absolute inset-0 pointer-events-none opacity-20 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#6E8F6C] via-transparent to-transparent blur-3xl animate-pulse" />
+      {/* Subtle Ambient Background */}
+      <div className="absolute inset-0 pointer-events-none opacity-20 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#6E8F6C] via-transparent to-transparent" />
 
       <div className="max-w-7xl mx-auto px-4 md:px-8 relative z-10 space-y-16">
         {/* Header */}
@@ -124,13 +130,15 @@ export default function YoureNotAloneSection() {
         {/* 3-Column Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           {/* Left: 3D Glossy Sphere with Overlay */}
-          <div className="lg:col-span-4 relative h-64 lg:h-80 flex items-center justify-center">
-            <Canvas camera={{ position: [0, 0, 4.8], fov: 45 }}>
-              <ambientLight intensity={1.5} />
-              <directionalLight position={[3, 3, 3]} intensity={2} color="#7FA07A" />
-              <pointLight position={[-3, -3, -1]} intensity={1} color="#D98F6E" />
-              <MiniGlossySphere />
-            </Canvas>
+          <div ref={canvasContainerRef} className="lg:col-span-4 relative h-64 lg:h-80 flex items-center justify-center">
+            {isVisible && (
+              <Canvas camera={{ position: [0, 0, 4.8], fov: 45 }}>
+                <ambientLight intensity={1.5} />
+                <directionalLight position={[3, 3, 3]} intensity={2} color="#7FA07A" />
+                <pointLight position={[-3, -3, -1]} intensity={1} color="#D98F6E" />
+                <MiniGlossySphere />
+              </Canvas>
+            )}
 
             {/* Badge Overlay */}
             <div className="absolute glass-card-dark px-5 py-3 rounded-2xl text-center shadow-xl border border-white/10">
@@ -167,8 +175,8 @@ export default function YoureNotAloneSection() {
           {/* Right: Stat Card with Animated Count-Up Numbers */}
           <div className="lg:col-span-3 glass-card-dark p-6 sm:p-8 rounded-3xl space-y-6 border border-white/10 text-center lg:text-left">
             <div>
-              <span className="font-serif-display text-4xl font-bold text-[#7FA07A]">
-                {counts.heard}%
+              <span ref={heardRef} className="font-serif-display text-4xl font-bold text-[#7FA07A]">
+                0%
               </span>
               <p className="text-xs text-[#F3EFE6]/80 font-medium mt-1">
                 felt heard after their nudge
@@ -176,8 +184,8 @@ export default function YoureNotAloneSection() {
             </div>
 
             <div className="border-t border-white/10 pt-4">
-              <span className="font-serif-display text-4xl font-bold text-[#D98F6E]">
-                {counts.time}min
+              <span ref={timeRef} className="font-serif-display text-4xl font-bold text-[#D98F6E]">
+                0min
               </span>
               <p className="text-xs text-[#F3EFE6]/80 font-medium mt-1">
                 avg check-in time
@@ -185,8 +193,8 @@ export default function YoureNotAloneSection() {
             </div>
 
             <div className="border-t border-white/10 pt-4">
-              <span className="font-serif-display text-4xl font-bold text-[#F3EFE6]">
-                {counts.total}k+
+              <span ref={totalRef} className="font-serif-display text-4xl font-bold text-[#F3EFE6]">
+                0k+
               </span>
               <p className="text-xs text-[#F3EFE6]/80 font-medium mt-1">
                 check-ins this month
