@@ -7,7 +7,6 @@ import HeroSection from "@/components/HeroSection";
 import WhyNudgeSection from "@/components/WhyNudgeSection";
 import DailyCheckinSection from "@/components/DailyCheckinSection";
 import WhatHappensNextSection from "@/components/WhatHappensNextSection";
-import DesignProcessSection from "@/components/DesignProcessSection";
 
 // Lazy load non-hero 3D sections for fast initial bundle
 const YoureNotAloneSection = lazy(() => import("@/components/YoureNotAloneSection"));
@@ -38,7 +37,6 @@ export default function Home() {
         </Suspense>
 
         <WhatHappensNextSection />
-        <DesignProcessSection />
 
         <Suspense fallback={<div className="py-20 bg-[#14251C]" />}>
           <Footer3D />

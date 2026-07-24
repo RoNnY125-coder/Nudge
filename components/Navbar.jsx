@@ -102,7 +102,6 @@ export default function Navbar() {
           <MagneticLink href="#how-it-works">How it works</MagneticLink>
           <MagneticLink href="#science">Science</MagneticLink>
           <MagneticLink href="#stories">Stories</MagneticLink>
-          <MagneticLink href="#about">About</MagneticLink>
         </nav>
 
         {/* Right CTA */}
