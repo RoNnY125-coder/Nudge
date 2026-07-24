@@ -3,7 +3,6 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { User, Sparkles, CheckCircle2 } from "lucide-react";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -44,17 +43,6 @@ export default function DesignProcessSection() {
       desc: "2,400+ weekly active users. NPS 72. Feature in Awwwards shortlist.",
       accent: "bg-[#D98F6E]",
     },
-  ];
-
-  const skills = [
-    "User Research",
-    "Brand Identity",
-    "Figma",
-    "Interaction Design",
-    "Design Systems",
-    "Prototyping",
-    "Accessibility",
-    "Handoff",
   ];
 
   useEffect(() => {
@@ -100,8 +88,7 @@ export default function DesignProcessSection() {
           Built from the inside out.
         </h2>
         <p className="text-lg text-[#6B6F68] leading-relaxed">
-          As lead UI/UX designer, I shaped Nudge from research to release — obsessing
-          over every detail of how it feels to use.
+          Nudge was shaped from research to release — obsessing over every detail of how it feels to use.
         </p>
       </div>
 
@@ -130,46 +117,6 @@ export default function DesignProcessSection() {
                 {step.desc}
               </p>
             </div>
-          ))}
-        </div>
-      </div>
-
-      {/* "My Role" Card */}
-      <div className="glass-card p-8 md:p-10 rounded-3xl border border-white/80 max-w-4xl mx-auto space-y-6">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-[#E2DCD0] pb-6">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-full bg-[#14251C] text-white flex items-center justify-center">
-              <User className="w-6 h-6" />
-            </div>
-            <div>
-              <span className="text-xs font-semibold text-[#6E8F6C] uppercase tracking-wider">
-                My role
-              </span>
-              <h3 className="font-serif-display text-2xl font-bold text-[#1E2A22]">
-                Lead UI/UX Designer — end to end
-              </h3>
-            </div>
-          </div>
-          <span className="px-3.5 py-1.5 rounded-full bg-[#6E8F6C]/10 text-[#6E8F6C] text-xs font-semibold flex items-center gap-1.5">
-            <CheckCircle2 className="w-4 h-4" /> Available for projects
-          </span>
-        </div>
-
-        <p className="text-[#6B6F68] leading-relaxed">
-          Led overall product strategy, visual direction, design systems architecture,
-          user research syntheses, and interactive prototyping. Worked closely with engineering
-          to deliver a calm, human-centric WebGL experience.
-        </p>
-
-        {/* Skill Pills */}
-        <div className="flex flex-wrap gap-2 pt-2">
-          {skills.map((skill) => (
-            <span
-              key={skill}
-              className="px-3.5 py-1.5 rounded-full bg-[#FAF7F0] border border-[#E2DCD0] text-xs font-semibold text-[#1E2A22]"
-            >
-              {skill}
-            </span>
           ))}
         </div>
       </div>
