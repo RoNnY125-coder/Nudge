@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { CheckCircle2, ShieldCheck, Sparkles, Sliders } from "lucide-react";
+import { getOrCreateDeviceId } from "@/lib/identity";
 
 const SYMPTOMS = [
   "Tired",
@@ -22,6 +23,8 @@ const SYMPTOMS = [
 export default function DailyCheckinSection() {
   const [selectedTags, setSelectedTags] = useState(["Tired", "Low mood", "Trouble sleeping"]);
   const [energyLevel, setEnergyLevel] = useState(4);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
   // 3D Perspective Tilt for the App UI Mockup Card
   const x = useMotionValue(0);
@@ -51,6 +54,40 @@ export default function DailyCheckinSection() {
       setSelectedTags(selectedTags.filter((t) => t !== tag));
     } else {
       setSelectedTags([...selectedTags, tag]);
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (isSubmitting) return;
+
+    try {
+      setIsSubmitting(true);
+      const deviceId = getOrCreateDeviceId();
+
+      const res = await fetch("/api/checkin", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          deviceId,
+          symptoms: selectedTags,
+          energyLevel,
+        }),
+      });
+
+      if (res.ok) {
+        setSubmitted(true);
+        setTimeout(() => {
+          setSubmitted(false);
+          const scienceSection = document.getElementById("science");
+          if (scienceSection) {
+            scienceSection.scrollIntoView({ behavior: "smooth" });
+          }
+        }, 1200);
+      }
+    } catch (err) {
+      console.error("Failed to submit check-in:", err);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -140,7 +177,7 @@ export default function DailyCheckinSection() {
                     onClick={() => toggleTag(tag)}
                     className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 cursor-pointer ${
                       isSelected
-                        ? "bg-[#6E8F6C] text-white shadow-sm scale-105"
+                        ? "bg-[#6E8F6C] text-[#FAF7F0] shadow-sm scale-105"
                         : "bg-[#FAF7F0] text-[#1E2A22] border border-[#E2DCD0] hover:bg-[#E8E2D5]"
                     }`}
                   >
@@ -177,11 +214,13 @@ export default function DailyCheckinSection() {
 
             {/* Button */}
             <motion.button
+              onClick={handleSubmit}
+              disabled={isSubmitting}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="w-full py-4 rounded-2xl bg-[#14251C] text-white text-sm font-semibold hover:bg-[#6E8F6C] transition-colors shadow-md flex items-center justify-center gap-2"
+              className="w-full py-4 rounded-2xl bg-[#14251C] text-white text-sm font-semibold hover:bg-[#6E8F6C] transition-colors shadow-md flex items-center justify-center gap-2 cursor-pointer disabled:opacity-80"
             >
-              Get my nudge
+              {submitted ? "Saved 🌱" : isSubmitting ? "Saving..." : "Get my nudge"}
             </motion.button>
           </motion.div>
         </div>

@@ -44,12 +44,36 @@ export default function YoureNotAloneSection() {
   const totalRef = useRef(null);
   const [isInView, setIsInView] = useState(true);
 
-  const chartData = [
-    { label: "Tired / low energy", percentage: 72 },
-    { label: "Trouble sleeping", percentage: 58 },
-    { label: "Can't focus", percentage: 45 },
-    { label: "Anxious", percentage: 63 },
-  ];
+  const [stats, setStats] = useState({
+    totalCheckins: 2400,
+    percentages: [
+      { label: "Tired / low energy", percentage: 72 },
+      { label: "Trouble sleeping", percentage: 58 },
+      { label: "Can't focus", percentage: 45 },
+      { label: "Anxious", percentage: 63 },
+    ],
+  });
+
+  useEffect(() => {
+    // Fetch live aggregate stats from backend
+    fetch("/api/stats")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && data.totalCheckins) {
+          const syms = data.symptomPercentages || {};
+          setStats({
+            totalCheckins: data.totalCheckins,
+            percentages: [
+              { label: "Tired / low energy", percentage: syms["Tired / low energy"] || 72 },
+              { label: "Trouble sleeping", percentage: syms["Trouble sleeping"] || 58 },
+              { label: "Can't focus", percentage: syms["Can't focus"] || 45 },
+              { label: "Anxious", percentage: syms["Anxious"] || 63 },
+            ],
+          });
+        }
+      })
+      .catch((err) => console.error("Error fetching stats:", err));
+  }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -65,7 +89,7 @@ export default function YoureNotAloneSection() {
       // Bar fills on scroll
       barsRef.current.forEach((bar, idx) => {
         if (!bar) return;
-        const targetWidth = chartData[idx].percentage;
+        const targetWidth = stats.percentages[idx]?.percentage || 50;
         gsap.fromTo(
           bar,
           { width: "0%" },
@@ -96,7 +120,10 @@ export default function YoureNotAloneSection() {
                 const progress = this.progress();
                 if (heardRef.current) heardRef.current.innerText = `${Math.floor(progress * 94)}%`;
                 if (timeRef.current) timeRef.current.innerText = `${(progress * 3).toFixed(0)}min`;
-                if (totalRef.current) totalRef.current.innerText = `${(progress * 12).toFixed(0)}k+`;
+                if (totalRef.current) {
+                  const targetK = Math.max(12, Math.floor(stats.totalCheckins / 1000));
+                  totalRef.current.innerText = `${(progress * targetK).toFixed(0)}k+`;
+                }
               },
             }
           );
@@ -105,7 +132,7 @@ export default function YoureNotAloneSection() {
     }, sectionRef);
 
     return () => ctx.revert();
-  }, []);
+  }, [stats]);
 
   return (
     <section
@@ -143,7 +170,9 @@ export default function YoureNotAloneSection() {
 
             {/* Badge Overlay */}
             <div className="absolute glass-card-dark px-5 py-3 rounded-2xl text-center shadow-xl border border-white/10">
-              <span className="block text-2xl font-bold text-[#7FA07A]">2,400+</span>
+              <span className="block text-2xl font-bold text-[#7FA07A]">
+                {stats.totalCheckins.toLocaleString()}+
+              </span>
               <span className="text-xs text-[#F3EFE6]/80 font-medium">
                 people felt the same this week
               </span>
@@ -156,7 +185,7 @@ export default function YoureNotAloneSection() {
               Commonly reported signals
             </h3>
             <div className="space-y-4">
-              {chartData.map((item, idx) => (
+              {stats.percentages.map((item, idx) => (
                 <div key={idx} className="space-y-1.5">
                   <div className="flex justify-between text-xs font-semibold text-[#F3EFE6]/90">
                     <span>{item.label}</span>
